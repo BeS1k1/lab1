@@ -1,47 +1,73 @@
 #include <Arduino.h>
 #include <MD_TCS230.h>
 
-#define R_OUT 6
-#define G_OUT 7
-#define B_OUT 8
+#define RGB1 2
+#define RGB2 3
+#define RGB3 4
+#define RGB4 5
+#define RGB5 6
+#define RGB6 7
+#define RGB7 8
+#define RGB8 9
 
 
 void setup()
 {
-    Serial.begin(115200);
-    Serial.println("Started!");
+  Serial.begin(115200);
+  Serial.println("Enter a number from 0 to 255");
 
-    pinMode(R_OUT, OUTPUT);
-    pinMode(G_OUT, OUTPUT);
-    pinMode(B_OUT, OUTPUT);
+  pinMode(RGB1, OUTPUT);
+  pinMode(RGB2, OUTPUT);
+  pinMode(RGB3, OUTPUT);
+  pinMode(RGB4, OUTPUT);
+  pinMode(RGB5, OUTPUT);
+  pinMode(RGB6, OUTPUT);
+  pinMode(RGB7, OUTPUT);
+  pinMode(RGB8, OUTPUT);
 }
 
 void loop() 
 {
-    colorData rgb;
-    colorSensor.read();
-
-    while (!colorSensor.available());
-
-    colorSensor.getRGB(&rgb);
-    print_rgb(rgb);
-    set_rgb_led(rgb);
+  if (Serial.available() > 0)
+  {
+    int num = Serial.parseInt();
+    if (num > 255 || num < 0){
+      Serial.println("Incorrect input, please enter a number from 0 to 255");
+    }
+    to_binary(num);
+  }
 }
 
-void print_rgb(colorData rgb)
+void to_binary(int num)
 {
-  Serial.print(rgb.value[TCS230_RGB_R]);
-  Serial.print(" ");
-  Serial.print(rgb.value[TCS230_RGB_G]);
-  Serial.print(" ");
-  Serial.print(rgb.value[TCS230_RGB_B]);
-  Serial.println();
+  string arr[8];
+  for (int j = 0; j < 8; j++)
+  {
+    arr[j] = "LOW";
+  }
+  int i=7;
+  int bin;
+  while (num>0)
+  {
+    bin = num%2;
+    if (bin == 1)
+    {
+      arr[i] = "HIGH";
+    }
+    num/=2;
+    i--;
+  }
+  lighting(arr);
 }
 
-void set_rgb_led(colorData rgb)
+void lighting(string arr[])
 {
-    analogWrite(R_OUT, 255 - rgb.value[TCS230_RGB_R]);
-    analogWrite(G_OUT, 255 - rgb.value[TCS230_RGB_G]);
-    analogWrite(B_OUT, 255 - rgb.value[TCS230_RGB_B]);
-
+  digitalWrite(RGB1, arr[7]);
+  digitalWrite(RGB2, arr[6]);
+  digitalWrite(RGB3, arr[5]);
+  digitalWrite(RGB4, arr[4]);
+  digitalWrite(RGB5, arr[3]);
+  digitalWrite(RGB6, arr[2]);
+  digitalWrite(RGB7, arr[1]);
+  digitalWrite(RGB8, arr[0]);
 }
