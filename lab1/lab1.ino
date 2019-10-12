@@ -33,39 +33,43 @@ void loop()
     if (num > 255 || num < 0){
       Serial.println("Incorrect input, please enter a number from 0 to 255");
     }
-    to_binary(num);
+    else
+    {
+      int *bits;
+      bits = to_binary(num);
+      lighting(bits);
+    }
   }
 }
 
-void to_binary(int num)
+int *to_binary(int num)
 {
-  int arr[8];
+  int *bits = new int[8];
   for (int j = 0; j < 8; j++)
   {
-    arr[j] = HIGH;
+    bits[j] = HIGH;
   }
   int i=7;
-  int bin;
   while (num>0)
   {
     if (num%2 == 1)
     {
-      arr[i] = LOW;
+      bits[i] = LOW;
     }
     num/=2;
     i--;
   }
-  lighting(arr);
+  return bits;
 }
 
-void lighting(int arr[])
+void lighting(int *bits)
 {
-  digitalWrite(RGB1, arr[7]);
-  digitalWrite(RGB2, arr[6]);
-  digitalWrite(RGB3, arr[5]);
-  digitalWrite(RGB4, arr[4]);
-  digitalWrite(RGB5, arr[3]);
-  digitalWrite(RGB6, arr[2]);
-  digitalWrite(RGB7, arr[1]);
-  digitalWrite(RGB8, arr[0]);
+  digitalWrite(RGB1, bits[7]);
+  digitalWrite(RGB2, bits[6]);
+  digitalWrite(RGB3, bits[5]);
+  digitalWrite(RGB4, bits[4]);
+  digitalWrite(RGB5, bits[3]);
+  digitalWrite(RGB6, bits[2]);
+  digitalWrite(RGB7, bits[1]);
+  digitalWrite(RGB8, bits[0]);
 }
