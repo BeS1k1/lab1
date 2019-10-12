@@ -6,10 +6,9 @@
 #define RGB3 4
 #define RGB4 5
 #define RGB5 6
-#define RGB6 7
-#define RGB7 8
-#define RGB8 9
-
+#define RGB6 8
+#define RGB7 9
+#define RGB8 10
 
 void setup()
 {
@@ -40,19 +39,18 @@ void loop()
 
 void to_binary(int num)
 {
-  string arr[8];
+  int arr[8];
   for (int j = 0; j < 8; j++)
   {
-    arr[j] = "LOW";
+    arr[j] = HIGH;
   }
   int i=7;
   int bin;
   while (num>0)
   {
-    bin = num%2;
-    if (bin == 1)
+    if (num%2 == 1)
     {
-      arr[i] = "HIGH";
+      arr[i] = LOW;
     }
     num/=2;
     i--;
@@ -60,7 +58,7 @@ void to_binary(int num)
   lighting(arr);
 }
 
-void lighting(string arr[])
+void lighting(int arr[])
 {
   digitalWrite(RGB1, arr[7]);
   digitalWrite(RGB2, arr[6]);
